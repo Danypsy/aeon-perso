@@ -1,0 +1,52 @@
+version: "1.0"
+models:
+  default: "claude-opus-4-7"
+  evaluator: "claude-haiku-4-5-20251001"
+
+skills:
+  morning-brief:
+    enabled: true
+    schedule: "0 7 * * *"
+    var: "veille IA, agents autonomes, tech, crypto, actualités France/Europe. Focus impact business, opportunités et analyses de premier plan. Rédigé en français clair et actionnable."
+
+  deep-research:
+    enabled: true
+    schedule: "0 9 * * 1,3,5"
+    var: "Analyse approfondie des tendances émergentes en IA générative, agents autonomes et frameworks comme Aeon. Croise sources primaires et contradictoires."
+
+  article-generation:
+    enabled: true
+    schedule: "0 11 * * 2,4"
+    var: "Produit un article publication-ready (800-1500 mots) sur un sujet d'actualité IA/tech. Style professionnel, structuré, avec sources."
+
+  skill-health-check:
+    enabled: true
+    schedule: "0 12 * * *"
+
+  self-improve:
+    enabled: true
+    schedule: "0 4 * * 0"
+
+chains:
+  daily-intelligence-pipeline:
+    schedule: "0 7 * * *"
+    steps:
+      - parallel:
+          - morning-brief
+          - deep-research
+      - skill: article-generation
+        consume:
+          - morning-brief
+          - deep-research
+
+notifications:
+  default_channel: telegram
+  on_success: true
+  on_failure: true
+
+memory:
+  retention_days: 90
+
+quality:
+  min_score: 3.5
+  auto_repair: true
