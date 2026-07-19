@@ -1,43 +1,64 @@
-version: "1.0"
+version: "1.1"
+
 models:
-  default: "claude-opus-4-7"
+  default: "claude-sonnet-4-6"
   evaluator: "claude-haiku-4-5-20251001"
 
 skills:
   morning-brief:
     enabled: true
-    schedule: "0 7 * * *"
-    var: "veille IA, agents autonomes, tech, crypto, actualités France/Europe. Focus impact business, opportunités et analyses de premier plan. Rédigé en français clair et actionnable."
+    schedule: "15 6 * * *"
+    var: "France, Europe, international, IA, économie, défense, santé et médico-social. Hiérarchiser par impact. Distinguer faits confirmés, hypothèses, risques, signaux faibles et points à surveiller dans les 24 à 72 heures. Rédiger en français clair et actionnable."
+
+  research-brief:
+    enabled: true
+    schedule: "45 6 * * *"
+    var: "Veille locale Troyes, Romilly-sur-Seine, Nogent-sur-Seine, Provins et Aube : décisions publiques, entreprises, emploi, recrutements, appels à projets, subventions, marchés publics, ARS, Département, MDPH, ESAT, associations et agenda décisionnel des 7 prochains jours."
+
+  reg-monitor:
+    enabled: true
+    schedule: "0 12 * * 1-5"
+    var: "France : ESAT, handicap, ESSMS, loi 2002-2, HAS, CNSA, MDPH, ARS, droits des travailleurs, formation professionnelle, emploi et insertion. Expliquer les impacts opérationnels, les échéances, les risques de non-conformité et les actions à engager."
+
+  evening-recap:
+    enabled: true
+    schedule: "30 18 * * *"
+    var: "Synthétiser uniquement les développements réellement nouveaux depuis le briefing du matin. Exposer conséquences pratiques, risques à court terme, opportunités et sujets à reprendre le lendemain."
+
+  weekly-review:
+    enabled: true
+    schedule: "0 18 * * 0"
+    var: "Revue stratégique hebdomadaire : actualité, emploi, médico-social, ESAT, IA, réglementation et territoire Troyes/Aube. Identifier décisions à prendre, opportunités, risques, angles morts et priorités de la semaine suivante."
 
   deep-research:
     enabled: true
-    schedule: "0 9 * * 1,3,5"
-    var: "Analyse approfondie des tendances émergentes en IA générative, agents autonomes et frameworks comme Aeon. Croise sources primaires et contradictoires."
+    schedule: "workflow_dispatch"
+    var: ""
 
-  article-generation:
+  repo-pulse:
     enabled: true
-    schedule: "0 11 * * 2,4"
-    var: "Produit un article publication-ready (800-1500 mots) sur un sujet d'actualité IA/tech. Style professionnel, structuré, avec sources."
+    schedule: "0 15 * * 1,4"
+    var: "Danypsy"
 
-  skill-health-check:
+  skill-health:
     enabled: true
-    schedule: "0 12 * * *"
+    schedule: "0 17 * * *"
+
+  skill-evals:
+    enabled: true
+    schedule: "0 6 * * 0"
+
+  skill-repair:
+    enabled: true
+    schedule: "reactive"
 
   self-improve:
     enabled: true
     schedule: "0 4 * * 0"
 
-chains:
-  daily-intelligence-pipeline:
-    schedule: "0 7 * * *"
-    steps:
-      - parallel:
-          - morning-brief
-          - deep-research
-      - skill: article-generation
-        consume:
-          - morning-brief
-          - deep-research
+  heartbeat:
+    enabled: true
+    schedule: "0 7,13,19 * * *"
 
 notifications:
   default_channel: telegram
@@ -45,8 +66,8 @@ notifications:
   on_failure: true
 
 memory:
-  retention_days: 90
+  retention_days: 180
 
 quality:
-  min_score: 3.5
+  min_score: 4.0
   auto_repair: true
